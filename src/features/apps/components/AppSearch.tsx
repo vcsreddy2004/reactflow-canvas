@@ -1,20 +1,35 @@
 import { Search, Plus } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
-export default function AppSearch() {
+interface AppSearchProps {
+  value: string;
+  onChange: (value: string) => void;
+}
+
+export default function AppSearch({ value, onChange }: AppSearchProps) {
   return (
-    <div className="flex gap-2 mb-5">
-      <div className="flex-1 flex items-center bg-zinc-900 rounded-md px-3">
-        <input
-          placeholder="Search..."
-          className="flex-1 bg-transparent outline-none py-2"
+    <div className="mb-4 flex gap-2">
+      <div className="relative flex-1">
+        <Search
+          size={16}
+          className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-zinc-500"
         />
-
-        <Search size={18} />
+        <Input
+          placeholder="Search apps..."
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="border-zinc-700 bg-zinc-900 pl-9 text-white"
+        />
       </div>
-
-      <button className="bg-blue-600 hover:bg-blue-700 px-3 rounded-md">
-        <Plus size={18} />
-      </button>
+      <Button
+        type="button"
+        size="icon"
+        className="shrink-0 bg-blue-600 hover:bg-blue-700"
+        aria-label="Add app"
+      >
+        <Plus size={16} />
+      </Button>
     </div>
   );
 }

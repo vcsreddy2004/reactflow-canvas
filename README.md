@@ -1,73 +1,54 @@
-# React + TypeScript + Vite
+# App Graph Builder
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A responsive React application for visualizing and inspecting service graphs. Built as a take-home assignment demonstrating ReactFlow, TanStack Query, Zustand, and shadcn/ui integration.
 
-Currently, two official plugins are available:
+## Setup
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Scripts
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+| Script       | Description                          |
+| ------------ | ------------------------------------ |
+| `npm run dev`      | Start Vite dev server                |
+| `npm run build`    | Type-check and production build      |
+| `npm run preview`  | Preview production build             |
+| `npm run lint`     | Run ESLint                           |
+| `npm run typecheck`| Run TypeScript compiler (no emit)    |
+
+## Features
+
+- **Layout**: Top bar, left icon rail, right app/inspector panel, dotted ReactFlow canvas
+- **Responsive**: Right panel becomes a slide-over drawer on screens below `md` (768px), toggled via Zustand
+- **ReactFlow**: 3+ nodes per app, drag, select, delete (Backspace/Delete), zoom/pan, fit view
+- **Node Inspector**: Status badge, Config/Runtime tabs, synced slider + numeric CPU input, editable name/description
+- **TanStack Query**: Mock `GET /apps` and `GET /apps/:appId/graph` with loading/error states and caching
+- **Zustand**: `selectedAppId`, `selectedNodeId`, `isMobilePanelOpen`, `activeInspectorTab`
+
+## Key Decisions
+
+- **Mock API**: In-memory data with `setTimeout` latency (~600ms) instead of MSW, keeping the setup lightweight while still demonstrating async fetch patterns.
+- **Graph bridge**: A small Zustand bridge connects ReactFlow's internal node state to the inspector panel without prop drilling across the layout tree.
+- **Per-app graphs**: Each application has its own node/edge configuration; switching apps refetches via TanStack Query and resets selection.
+- **Error simulation**: Top bar toggle sets a global flag that causes mock API calls to reject, useful for testing error UI.
+
+## Known Limitations
+
+- App search and "Add app" button are UI-only (no create flow).
+- Left rail navigation icons are static placeholders.
+- Node edits are in-memory only and reset when switching apps.
+- No persistence layer (localStorage/backend).
+
+## Tech Stack
+
+- React 19 + Vite
+- TypeScript (strict)
+- @xyflow/react (ReactFlow)
+- TanStack Query
+- Zustand
+- shadcn/ui + Tailwind CSS v4

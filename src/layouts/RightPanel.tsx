@@ -1,13 +1,36 @@
-export default function RightPanel() {
-  return (
-    <aside className="w-80 border-l border-zinc-800 bg-zinc-950 p-4">
-      <h2 className="font-semibold mb-4">
-        Inspector
-      </h2>
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import RightPanelContent from "./RightPanelContent";
+import {
+  selectIsMobilePanelOpen,
+  useAppStore,
+} from "@/store/useAppStore";
 
-      <div className="rounded border border-zinc-700 p-3">
-        Select a node
-      </div>
-    </aside>
+export default function RightPanel() {
+  const isMobilePanelOpen = useAppStore(selectIsMobilePanelOpen);
+  const setMobilePanelOpen = useAppStore((s) => s.setMobilePanelOpen);
+
+  return (
+    <>
+      <aside className="hidden w-80 shrink-0 flex-col border-l border-zinc-800 bg-zinc-950 md:flex">
+        <RightPanelContent />
+      </aside>
+
+      <Sheet open={isMobilePanelOpen} onOpenChange={setMobilePanelOpen}>
+        <SheetContent
+          side="right"
+          className="w-full border-zinc-800 bg-zinc-950 p-0 sm:max-w-sm"
+        >
+          <SheetHeader className="border-b border-zinc-800">
+            <SheetTitle className="text-white">Panel</SheetTitle>
+          </SheetHeader>
+          <RightPanelContent />
+        </SheetContent>
+      </Sheet>
+    </>
   );
 }
